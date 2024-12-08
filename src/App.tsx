@@ -1,23 +1,35 @@
 import './App.css'
 
-// Grid version 2
-import Grid from '@mui/material/Grid2' 
 import IndicatorWeather from './components/IndicatorWeather';
 import TableWeather from './components/TableWeather';
 import ControlWeather from './components/ControlWeather';
 import LineChartWeather from './components/LineChartWeather';
 import SunIndicator from './components/sunIndicator';
+import SideNav from './components/SideNav';
+import Items from './interface/item.tsx';
+
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+// Grid version 2
+import Grid from '@mui/material/Grid2' 
 
  {/* Hooks */ }
 import { useEffect, useState } from 'react'; 
+
 
 interface Indicator {
   title?: string;
   image?: string;
   subtitle?: string;
   value?: string;
+}
+
+interface Item {
+  dateStart: String;
+  dateEnd: String; 
+  rainProb: String;
+  humidity: String;
+  description: String;
 }
 
 let name = '', 
@@ -34,13 +46,16 @@ let name = '',
     sunset = '', 
     city = '', 
     country = '', 
-    dt_txt = '';
+    dt_txt = '',
+    dateStart = '',
+    dateEnd = '';
 
 
 
 function App() {  
   {/* Variable de estado y función de actualización */}
   let [indicators, setIndicators] = useState<Indicator[]>([])
+  let [items, setItems] = useState<Item[]>([])
   let [owm, setOWM] = useState(localStorage.getItem("openWeatherMap"))
 
 
@@ -93,7 +108,9 @@ function App() {
           {/* Arreglo para agregar los resultados */}
 
           let dataToIndicators : Indicator[] = new Array<Indicator>();
-
+          let dataToItems : Item[] = new Array<Item>();
+          
+          
           {/* 
               Análisis, extracción y almacenamiento del contenido del XML 
               en el arreglo de resultados
@@ -102,8 +119,8 @@ function App() {
           name = xml.getElementsByTagName("name")[0].innerHTML || ""
           let location = xml.getElementsByTagName("location")[1]
           let location1 = xml.getElementsByTagName("location")[0]
-          let time = xml.getElementsByTagName("forecast")[0].getElementsByTagName("time")[0]
-
+          /*let time = xml.getElementsByTagName("forecast")[0].getElementsByTagName("time")
+          console.log(time)
           description = time.getElementsByTagName("symbol")[0].getAttribute("name") || ""
           rainProb = time.getElementsByTagName("precipitation")[0].getAttribute("probability") || ""
           
@@ -117,17 +134,41 @@ function App() {
 
           humidity = `${time.getElementsByTagName("humidity")[0].getAttribute("value") || ""} ${time.getElementsByTagName("humidity")[0].getAttribute("unit") || ""}`.trim();
           
-          sunrise = xml.getElementsByTagName("sun")[0].getAttribute("rise") || ""
+          /*sunrise = xml.getElementsByTagName("sun")[0].getAttribute("rise") || ""
           sunset = xml.getElementsByTagName("sun")[0].getAttribute("set") || ""
           
           city = location1.getElementsByTagName("name")[0].innerHTML || ""
           country = location1.getElementsByTagName("country")[0].innerHTML || ""
           
           dt_txt = `${time.getAttribute("from") || ""} ${time.getAttribute("to") || ""}`.trim();
+          dateStart = time.getAttribute("from") || "";
+          dateEnd = time.getAttribute("to") || ""; */
 
 
           {/* Modificación de la variable de estado mediante la función de actualización */}
-          setIndicators( dataToIndicators )
+          setIndicators( dataToIndicators)
+
+            for (let i = 0; i < 6; i++){
+              let time = xml.getElementsByTagName("forecast")[0].getElementsByTagName("time")[i]
+              description = time.getElementsByTagName("clouds")[0].getAttribute("all") || ""
+              rainProb = time.getElementsByTagName("precipitation")[0].getAttribute("probability") || ""
+              humidity = `${time.getElementsByTagName("humidity")[0].getAttribute("value") || ""} ${time.getElementsByTagName("humidity")[0].getAttribute("unit") || ""}`.trim();
+
+              dateStart = time.getAttribute("from") || "";
+              dateStart = dateStart.split("T")[1]; // "12:00:00"
+
+              dateEnd = time.getAttribute("to") || "";   
+              dateEnd = dateEnd.split("T")[1]; // "12:00:00"
+
+              
+              dataToItems.push({ dateStart, dateEnd, rainProb, humidity, description });
+              setItems(dataToItems);
+            }
+
+          
+
+
+
         }
     } 
     request();
@@ -151,7 +192,10 @@ function App() {
 
   return (
     <Box>
+      <SideNav/>
+
       <Typography variant="h5" sx={{textAlign: 'left', mb: 1}}>Today overview: </Typography>
+
       <Grid container spacing={5}>
           {/* Indicadores */}
           <Grid size={{ xs: 12, xl: 3 }}>  
@@ -178,7 +222,8 @@ function App() {
                 <ControlWeather/>
               </Grid>
               <Grid size={{ xs: 12, xl: 9 }}>
-                <TableWeather/>
+              <TableWeather itemsIn={ items } />
+
               </Grid>
             </Grid>
           </Grid>
@@ -188,7 +233,6 @@ function App() {
             <LineChartWeather/>
           </Grid>
           {renderIndicators()}
-          <Typography>Hola</Typography>
 
           <Grid>
             <SunIndicator title={'Sunrise'} image={'dashboard/img/sunrise (1).png'} value= {sunrise} />
@@ -196,7 +240,7 @@ function App() {
           <Grid>
             <SunIndicator title={'Sunset'} image={'dashboard/img/sunset (1).png'} value= {sunset} />
           </Grid>
-          
+
       </Grid>
 
     </Box>
