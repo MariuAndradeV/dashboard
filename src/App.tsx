@@ -129,6 +129,7 @@ function App() {
         }
         const parser = new DOMParser();
         const xml = parser.parseFromString(savedTextXML, "application/xml");
+        console.log(xml)
         {
           /* Arreglo para agregar los resultados */
         }
@@ -143,12 +144,39 @@ function App() {
         name = `${xml.getElementsByTagName("name")[0].innerHTML || ""} ${
           xml.getElementsByTagName("country")[0].innerHTML || ""
         }`.trim();
+        
+        let timeString  = xml.getElementsByTagName("sun")[0].getAttribute("rise") || "";
+        timeString  = timeString.split("T")[1];
 
-        sunrise = xml.getElementsByTagName("sun")[0].getAttribute("rise") || "";
-        sunrise = sunrise.split("T")[1];
-        sunset = xml.getElementsByTagName("sun")[0].getAttribute("set") || "";
-        sunset = sunset.split("T")[1];
+        const [hours, minutes, seconds] = timeString.split(":").map(Number); // Dividir y convertir a números
 
+        const date = new Date();
+        date.setHours(hours);
+        date.setMinutes(minutes);
+        date.setSeconds(seconds);
+        
+        // Restar 5 horas (en milisegundos)
+        date.setHours(date.getHours() - 5);
+        
+        // Obtener la hora resultante
+        sunrise = date.toTimeString().split(" ")[0]; // Devuelve solo HH:mm:ss
+
+        let timeString2  = xml.getElementsByTagName("sun")[0].getAttribute("set") || "";
+        timeString2  = timeString2.split("T")[1];
+
+        const [hours2, minutes2, seconds2] = timeString2.split(":").map(Number); // Dividir y convertir a números
+
+        const date2 = new Date();
+        date2.setHours(hours2);
+        date2.setMinutes(minutes2);
+        date2.setSeconds(seconds2);
+        
+        // Restar 5 horas (en milisegundos)
+        date2.setHours(date2.getHours() - 5);
+        
+        // Obtener la hora resultante
+        sunset = date2.toTimeString().split(" ")[0]; // Devuelve solo HH:mm:ss
+        
         let tiempo = xml
           .getElementsByTagName("forecast")[0]
           .getElementsByTagName("time")[0];
