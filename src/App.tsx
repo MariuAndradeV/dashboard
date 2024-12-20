@@ -60,7 +60,10 @@ function App() {
   let [owm, setOWM] = useState(localStorage.getItem("openWeatherMap"));
 
   const [selectedVariable, setSelectedVariable] = useState<string>("");
-
+  indicators
+  datos
+  selectedVariable
+  
   {
     /* Hook: useEffect */
   }
