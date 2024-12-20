@@ -1,71 +1,53 @@
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid2';
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableRow from "@mui/material/TableRow";
 
-interface Indicator {
-    title?: string;
-    image?: string;
-    subtitle?: string;
-    value?: string;
+import NextDaysItem from "../interface/nextDaysItem.tsx";
+import theme from "../config/theme.ts";
+
+{
+  /* Hooks */
+}
+import { useEffect, useState } from "react";
+
+interface MyProp {
+  itemsIn: NextDaysItem[];
 }
 
-export default function IndicatorWeather(config: Indicator) {
-    return (
-        <Box>
-            <Grid container spacing={2} columns={24}>
-                <Grid size={8}>
-                <Typography>Dia1</Typography>
-                </Grid>
+export default function NextDays(props: MyProp) {
+  let [rows, setRows] = useState<NextDaysItem[]>([]);
 
-                <Grid container size={16}>
-                <Grid size={12}>
-                    <Typography>2</Typography>
-                </Grid>
-                <Grid size={12}>
-                    <Typography>foto</Typography>
-                </Grid>
-                </Grid>
+  useEffect(() => {
+    setRows(props.itemsIn);
+  }, [props]);
 
-                <Grid size={8}>
-                <Typography>Dia2</Typography>
-                </Grid>
+  return (
+    <TableBody
+      sx={{
+        bgcolor: theme.palette.info.contrastText,
+        "& .MuiTableCell-root": {
+          textAlign: "center",
+          verticalAlign: "middle",
+        },
+      }}
+    >
 
-                <Grid container columns={12} size={16}>
-                <Grid size={6}>
-                    <Typography>5</Typography>
-                </Grid>
-                <Grid size={6}>
-                    <Typography>foto</Typography>
-                </Grid>
-                </Grid>
-                <Grid size={8}>
-                <Typography>Dia3</Typography>
-                </Grid>
-
-                <Grid container size={16}>
-                <Grid size={12}>
-                    <Typography>2</Typography>
-                </Grid>
-                <Grid size={12}>
-                    <Typography>foto</Typography>
-                </Grid>
-                </Grid>
-
-                <Grid size={8}>
-                <Typography>Dia4</Typography>
-                </Grid>
-
-                <Grid container columns={12} size={16}>
-                <Grid size={6}>
-                    <Typography>5</Typography>
-                </Grid>
-                <Grid size={6}>
-                    <Typography>foto</Typography>
-                </Grid>
-                </Grid>
-
-            </Grid>
-
-        </Box>
-    )
+      {rows.map((row, idx) => (
+        <TableRow
+          key={idx}
+          sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+        >
+          <TableCell component="th" scope="row"> {row.dayNextDays} </TableCell>
+          <TableCell>{row.tempNextDays}</TableCell>
+          <TableCell>
+            <img
+              src= {row.imgNextDays}
+              alt= "Weather Icon"
+              style={{ width: "50px", height: "50px" }}
+            />
+          </TableCell>
+        </TableRow>
+      ))}
+    </TableBody>
+  );
 }

@@ -58,3 +58,64 @@
         <time from="2024-12-06T03:00:00" to="2024-12-06T06:00:00"><symbol number="804" name="overcast clouds" var="04n"></symbol><precipitation probability="0.31"></precipitation><windDirection deg="229" code="SW" name="Southwest"></windDirection><windSpeed mps="2.69" unit="m/s" name="Light breeze"></windSpeed><windGust gust="3.74" unit="m/s"></windGust><temperature unit="kelvin" value="296.93" min="296.93" max="296.93"></temperature><feels_like value="297.3" unit="kelvin"></feels_like><pressure unit="hPa" value="1012"></pressure><humidity value="74" unit="%"></humidity><clouds value="overcast clouds" all="94" unit="%"></clouds><visibility value="10000"></visibility></time>
         
         <time from="2024-12-06T06:00:00" to="2024-12-06T09:00:00"><symbol number="500" name="light rain" var="10n"></symbol><precipitation probability="0.35" unit="3h" value="0.19" type="rain"></precipitation><windDirection deg="210" code="SSW" name="South-southwest"></windDirection><windSpeed mps="1.73" unit="m/s" name="Light breeze"></windSpeed><windGust gust="2.53" unit="m/s"></windGust><temperature unit="kelvin" value="296.32" min="296.32" max="296.32"></temperature><feels_like value="
+
+
+
+
+
+
+            <Box>
+      <AppHeader/>
+      <SideBar fecha={dt_txt} ciudad={name} pais={pais} temp={temp} feels_like={feels_like} description={description2} image={`dashboard/img/${description2}.png` }/>
+      <NextDays itemsIn={ nextDaysItems } />
+
+      <Typography variant="h5" sx={{textAlign: 'left', mb: 1}}>Today overview: </Typography>
+
+      <Grid container spacing={5}>
+          {/* Indicadores */}
+          <Grid size={{ xs: 12, xl: 3 }}>  
+            <IndicatorWeather title={'Wind Speed'} image={'dashboard/img/wind.png'} subtitle={"Unidad 1"} value={windSpeed} /> 
+          </Grid> 
+
+          <Grid size={{ xs: 12, xl: 3 }}>
+            <IndicatorWeather title={'Rain Chance'} image={'dashboard/img/rainy.png'} subtitle={'Unidad 2'} value={probability} />
+          </Grid>
+          
+          <Grid size={{ xs: 12, xl: 3 }}> 
+            <IndicatorWeather title={'Huminity'} image={'dashboard/img/humidity.png'} subtitle={'Unidad 3'} value={humidity} />
+          </Grid>
+          
+          <Grid size={{ xs: 12, xl: 3 }}> 
+            <IndicatorWeather title={'Atmospheric Pressure'} image={'dashboard/img/flexibility.png'} subtitle={'Unidad 4'} value= {pressure} />
+          </Grid>
+
+          {/* Tabla */}
+          <Grid size={{ xs: 12, xl: 8 }}>
+            {/* Grid Anidado */}
+            <Grid container spacing={2}>
+              <Grid size={{ xs: 12, xl: 3 }}>
+                <ControlWeather/>
+              </Grid> 
+              <Grid size={{ xs: 12, xl: 9 }}>
+              <TableWeather itemsIn={ items } />
+
+              </Grid>
+            </Grid>
+          </Grid>
+
+          {/* Gráfico */}
+          <Grid size={{ xs: 12, xl: 4 }}>
+            <LineChartWeather/>
+          </Grid>
+          {renderIndicators()}
+
+          <Grid>
+            <SunIndicator title={'Sunrise'} image={'dashboard/img/sunrise (1).png'} value= {sunrise} />
+          </Grid>
+          <Grid>
+            <SunIndicator title={'Sunset'} image={'dashboard/img/sunset (1).png'} value= {sunset} />
+          </Grid>
+
+      </Grid>
+
+    </Box>

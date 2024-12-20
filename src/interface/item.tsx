@@ -1,7 +1,9 @@
-export default interface Item {
+export default interface item {
     dateStart: String;
     dateEnd: String; 
+    temp: String; 
     rainProb: String;
-    humidity: String;
-    description: String;
+    windSpeedC: String;
+    humedad: String;
+    pressureC: String;
 }
